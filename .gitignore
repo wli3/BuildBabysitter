@@ -1,0 +1,42 @@
+###############################################################################
+# Build Artifacts
+###############################################################################
+artifacts/
+bin/
+obj/
+
+###############################################################################
+# Visual Studio
+###############################################################################
+.vs/
+.dotnet/
+.tools/
+.packages/
+
+# OS X Device Services Store
+.DS_Store
+
+# Performance tests GIT source
+.perftestsource/
+
+*.binlog
+
+sdk.sln.DotSettings.user
+
+temp
+.fake
+.vs
+*.js
+*.js.map
+.orig
+release.cmd
+release-preview.cmd
+paket-files
+issueList.md
+release/package-lock\.json
+*.vsix
+/release/bin_netcore/
+.ionide/
+/vendor/.paket/Paket.Restore.targets
+/release-exp/
+packages/
