@@ -14,7 +14,7 @@ module View =
             View.ViewCell
                 (view = View.StackLayout
                             (children = [ View.Label
-                                              (text = pullRequestEntry.URL.AbsoluteUri,
+                                              (text = pullRequestEntry.Url.AbsoluteUri,
                                                horizontalOptions = LayoutOptions.Fill)
                                           View.Button
                                               (text = "Remove",
