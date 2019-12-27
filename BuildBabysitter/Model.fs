@@ -7,9 +7,10 @@ open Xamarin.Forms
 
 module Model =
     type PullRequestStatus =
-        | Pending
-        | Done
+        | InProgress
+        | Completed
         | NeedAttention
+        | InternalError
 
     type PullRequestEntry =
         { Url : Uri
@@ -70,25 +71,32 @@ module Model =
                 { Title = "Invalid URL input"
                   Message = userInput + " is not valid URL" }
 
+    [<Struct>]
+    type OptionalBuilder =
+
+        member __.Bind(opt, binder) =
+            match opt with
+            | Some value -> binder value
+            | None -> None
+
+        member __.Return(value) = Some value
+
+    let optional = OptionalBuilder()
+
     let update msg model =
         match msg with
         | PullRequestEntryRemoved index -> { model with PullRequests = removeAt index model.PullRequests }, Cmd.none
         | TextInputChanged e -> { model with PullRequestInput = e.NewTextValue }, Cmd.none
         | PullRequestEntryConfirmed ->
-            match Uri.TryCreate(model.PullRequestInput, UriKind.Absolute) with
-            | (true, uri) ->
+            match parsePullRequestEntry model.PullRequestInput with
+            | Ok _ ->
                 { model with
                       PullRequests =
-                          ({ Url = uri
-                             Status = Pending }
+                          ({ Url = Uri(model.PullRequestInput)
+                             Status = InProgress }
                            :: model.PullRequests)
                       PullRequestInput = "" }, Cmd.none
-            | (false, _) ->
-                model,
-                Cmd.ofMsg
-                    (UserAlerted
-                        { Title = "Invalid URL input"
-                          Message = model.PullRequestInput + " is not valid URL" })
+            | Error alertInfo -> model, Cmd.ofMsg (UserAlerted alertInfo)
         | UserAlerted alertInfo ->
             Application.Current.MainPage.DisplayAlert(alertInfo.Title, alertInfo.Message, "Ok")
             |> Async.AwaitTask

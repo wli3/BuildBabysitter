@@ -18,4 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\BuildBabysitter\BuildBabysitter.fsproj" />
   </ItemGroup>
+
+    <ItemGroup>
+        <None Include="GithubPullRequestDetailSample.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

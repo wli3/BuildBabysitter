@@ -1,0 +1,47 @@
+{
+    "url": "https://api.github.com/repos/dotnet/sdk/pulls/4021",
+    "id": 350333740,
+    "head": {
+        "label": "dotnet:wli3-patch-1",
+        "ref": "wli3-patch-1",
+        "sha": "c4ef8697b2755826fbd651f30d442be4df92b847",
+        "repo": {
+            "id": 63984307,
+            "node_id": "MDEwOlJlcG9zaXRvcnk2Mzk4NDMwNw==",
+            "name": "sdk",
+            "full_name": "dotnet/sdk",
+            "private": false,
+            "owner": {
+                "login": "dotnet",
+                "id": 9141961,
+                "node_id": "MDEyOk9yZ2FuaXphdGlvbjkxNDE5NjE=",
+                "avatar_url": "https://avatars0.githubusercontent.com/u/9141961?v=4",
+                "gravatar_id": "",
+                "url": "https://api.github.com/users/dotnet",
+                "html_url": "https://github.com/dotnet",
+                "followers_url": "https://api.github.com/users/dotnet/followers",
+                "following_url": "https://api.github.com/users/dotnet/following{/other_user}",
+                "gists_url": "https://api.github.com/users/dotnet/gists{/gist_id}",
+                "starred_url": "https://api.github.com/users/dotnet/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/dotnet/subscriptions",
+                "organizations_url": "https://api.github.com/users/dotnet/orgs",
+                "repos_url": "https://api.github.com/users/dotnet/repos",
+                "events_url": "https://api.github.com/users/dotnet/events{/privacy}",
+                "received_events_url": "https://api.github.com/users/dotnet/received_events",
+                "type": "Organization",
+                "site_admin": false
+            },
+            "license": {
+                "key": "mit",
+                "name": "MIT License",
+                "spdx_id": "MIT",
+                "url": "https://api.github.com/licenses/mit",
+                "node_id": "MDc6TGljZW5zZTEz"
+            },
+            "forks": 207,
+            "open_issues": 483,
+            "watchers": 486,
+            "default_branch": "master"
+        }
+    }
+}

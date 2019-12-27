@@ -8,6 +8,8 @@ open FsUnit.Xunit
 open Xunit
 open System
 open Fabulous.XamarinForms
+open StatusCheck
+open System.IO
 
 [<Fact>]
 let ``When PullRequestEntryRemoved it should remove the entry``() =
@@ -38,7 +40,7 @@ let ``When PullRequestEntryConfirmed it should add the entry``() =
         { PullRequestInput = ""
           PullRequests =
               [ { Url = Uri("https://github.com/dotnet/sdk/pull/1")
-                  Status = Pending } ] }
+                  Status = InProgress } ] }
 
     match update PullRequestEntryConfirmed initialModel with
     | (state, _) -> state |> should equal expectedModel
@@ -96,3 +98,78 @@ let ``Given not pull request url it should get error``() =
                { Title = "Invalid URL input"
                  Message = "Not not valid URL. Not correct segment count" }
     | _ -> Assert.True(false, "fail")
+
+[<Fact>]
+let ``it can parser the GithubPullRequestDetail``() =
+    let deserializeResult = getGithubPullRequestHeadSha (File.ReadAllText("GithubPullRequestDetailSample.json"))
+    deserializeResult |> should equal { Sha = "c4ef8697b2755826fbd651f30d442be4df92b847" }
+
+[<Fact>]
+let ``it can construct GithubPullRequestDetail``() =
+    let result =
+        githubPullRequestDetail
+            { Owner = "dotnet"
+              Repo = "sdk"
+              PullNumber = 4021 }
+    result |> should equal (Uri("https://api.github.com/repos/dotnet/sdk/pulls/4021"))
+
+[<Fact>]
+let ``it can construct commitCheckRuns``() =
+    let result =
+        commitCheckRuns
+            { Owner = "dotnet"
+              Repo = "sdk"
+              PullNumber = 4021 } { Sha = "c4ef8697b2755826fbd651f30d442be4df92b847" }
+    result
+    |> should equal
+           (Uri("https://api.github.com/repos/dotnet/sdk/commits/c4ef8697b2755826fbd651f30d442be4df92b847/check-runs"))
+
+//[<Fact>]
+//let ``it can get PullRequestStatus``() =
+//    pullRequestStatus
+//        { Owner = "dotnet"
+//          Repo = "toolset"
+//          PullNumber = 3919 }
+//    |> should equal NeedAttention
+
+[<Fact>]
+let ``it can map Check runs status - NeedAttention``() =
+    Some { CheckRuns =
+          [| { Status = "in_progress"
+               Conclusion = None }
+             { Status = "completed"
+               Conclusion = Some "failure" }
+             { Status = "completed"
+               Conclusion = Some "failure" }
+             { Status = "completed"
+               Conclusion = Some "success" } |] }
+    |> getPullRequestStatus
+    |> should equal NeedAttention
+
+[<Fact>]
+let ``it can map Check runs status - InProgress``() =
+    Some { CheckRuns =
+          [| { Status = "in_progress"
+               Conclusion = None }
+             { Status = "in_progress"
+               Conclusion = None }
+          |] }
+    |> getPullRequestStatus
+    |> should equal InProgress
+
+[<Fact>]
+let ``it can map Check runs status - Completed``() =
+    Some { CheckRuns =
+          [| { Status = "completed"
+               Conclusion = Some "success" }
+             { Status = "completed"
+               Conclusion = Some "success" }
+          |] }
+    |> getPullRequestStatus
+    |> should equal Completed
+
+[<Fact>]
+let ``it can map Check runs status - InternalError``() =
+    None
+    |> getPullRequestStatus
+    |> should equal InternalError

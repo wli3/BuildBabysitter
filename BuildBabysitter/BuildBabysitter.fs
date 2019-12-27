@@ -14,7 +14,7 @@ module App =
         { PullRequestInput = ""
           PullRequests =
               [ { Url = Uri("https://github.com/dotnet/sdk/pull/4086")
-                  Status = Pending } ] }
+                  Status = InProgress } ] }
 
     let init() = initModel, Cmd.none
 
