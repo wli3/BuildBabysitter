@@ -20,7 +20,7 @@ module Update =
                           ({ Url = Uri(model.PullRequestInput)
                              Status = InProgress }
                            :: model.PullRequests)
-                      PullRequestInput = "" }, Cmd.none
+                      PullRequestInput = "" }, Cmd.ofMsg StatusesRefreshed
             | Error alertInfo -> model, Cmd.ofMsg (UserAlerted alertInfo)
         | UserAlerted alertInfo ->
             Application.Current.MainPage.DisplayAlert(alertInfo.Title, alertInfo.Message, "Ok")
@@ -28,5 +28,6 @@ module Update =
             |> ignore
             model, Cmd.none
         | StatusesRefreshed ->
-            let newstate = updateStatuses model.PullRequests
-            { model with PullRequests = newstate }, Cmd.none
+            let newState = updateStatuses model.PullRequests
+            { model with PullRequests = newState }, Cmd.none
+        |  TimedTick ->  model, Cmd.batch([timerCmd; Cmd.ofMsg StatusesRefreshed])

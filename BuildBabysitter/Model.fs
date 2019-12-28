@@ -30,6 +30,7 @@ module Model =
         | StatusesRefreshed
         | TextInputChanged of TextChangedEventArgs
         | UserAlerted of AlertInfo
+        | TimedTick
 
     let removeAt index input =
         input
@@ -71,6 +72,11 @@ module Model =
             Error
                 { Title = "Invalid URL input"
                   Message = userInput + " is not valid URL" }
+
+    let timerCmd =
+        async { do! Async.Sleep (TimeSpan.FromMinutes(2.0)).Milliseconds
+                return TimedTick }
+        |> Cmd.ofAsyncMsg
 
     [<Struct>]
     type OptionalBuilder =
