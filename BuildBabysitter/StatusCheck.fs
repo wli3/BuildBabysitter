@@ -6,7 +6,6 @@ open System
 open Xamarin.Forms
 open Model
 open Chiron
-open HttpFs.Client
 open Fetch
 
 module StatusCheck =

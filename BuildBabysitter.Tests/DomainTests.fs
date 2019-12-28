@@ -125,47 +125,48 @@ let ``it can construct commitCheckRuns``() =
     |> should equal
            (Uri("https://api.github.com/repos/dotnet/sdk/commits/c4ef8697b2755826fbd651f30d442be4df92b847/check-runs"))
 
-//[<Fact>]
-//let ``it can get PullRequestStatus``() =
-//    pullRequestStatus
-//        { Owner = "dotnet"
-//          Repo = "toolset"
-//          PullNumber = 3919 }
-//    |> should equal NeedAttention
+[<Fact(Skip = "Integration test")>]
+let ``it can get PullRequestStatus``() =
+    pullRequestStatus
+        { Owner = "dotnet"
+          Repo = "toolset"
+          PullNumber = 3919 }
+    |> should equal NeedAttention
 
 [<Fact>]
 let ``it can map Check runs status - NeedAttention``() =
-    Some { CheckRuns =
-          [| { Status = "in_progress"
-               Conclusion = None }
-             { Status = "completed"
-               Conclusion = Some "failure" }
-             { Status = "completed"
-               Conclusion = Some "failure" }
-             { Status = "completed"
-               Conclusion = Some "success" } |] }
+    Some
+        { CheckRuns =
+              [| { Status = "in_progress"
+                   Conclusion = None }
+                 { Status = "completed"
+                   Conclusion = Some "failure" }
+                 { Status = "completed"
+                   Conclusion = Some "failure" }
+                 { Status = "completed"
+                   Conclusion = Some "success" } |] }
     |> getPullRequestStatus
     |> should equal NeedAttention
 
 [<Fact>]
 let ``it can map Check runs status - InProgress``() =
-    Some { CheckRuns =
-          [| { Status = "in_progress"
-               Conclusion = None }
-             { Status = "in_progress"
-               Conclusion = None }
-          |] }
+    Some
+        { CheckRuns =
+              [| { Status = "in_progress"
+                   Conclusion = None }
+                 { Status = "in_progress"
+                   Conclusion = None } |] }
     |> getPullRequestStatus
     |> should equal InProgress
 
 [<Fact>]
 let ``it can map Check runs status - Completed``() =
-    Some { CheckRuns =
-          [| { Status = "completed"
-               Conclusion = Some "success" }
-             { Status = "completed"
-               Conclusion = Some "success" }
-          |] }
+    Some
+        { CheckRuns =
+              [| { Status = "completed"
+                   Conclusion = Some "success" }
+                 { Status = "completed"
+                   Conclusion = Some "success" } |] }
     |> getPullRequestStatus
     |> should equal Completed
 
@@ -177,4 +178,9 @@ let ``it can map Check runs status - InternalError``() =
 
 [<Fact>]
 let ``it can updateStatuses``() =
-    updateStatuses [ { Url = Uri("https://github.com/dotnet/toolset/pull/391"); Status = NeedAttention } ] |> should equal 3
+    updateStatuses
+        [ { Url = Uri("https://github.com/dotnet/toolset/pull/391")
+            Status = NeedAttention } ]
+    |> should equal
+           [ { Url = (Uri "https://github.com/dotnet/toolset/pull/391")
+               Status = Completed } ]
