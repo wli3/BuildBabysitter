@@ -8,6 +8,7 @@ open Fabulous.XamarinForms.LiveUpdate
 open Xamarin.Forms
 open Model
 open View
+open Update
 
 module App =
     let initModel =
