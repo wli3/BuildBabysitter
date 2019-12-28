@@ -74,7 +74,7 @@ module Model =
                   Message = userInput + " is not valid URL" }
 
     let timerCmd =
-        async { do! Async.Sleep (TimeSpan.FromMinutes(2.0)).Milliseconds
+        async { do! Async.Sleep (2 * 60 * 1000)
                 return TimedTick }
         |> Cmd.ofAsyncMsg
 

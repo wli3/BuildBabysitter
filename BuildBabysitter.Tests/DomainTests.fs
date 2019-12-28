@@ -176,7 +176,7 @@ let ``it can map Check runs status - InternalError``() =
     |> getPullRequestStatus
     |> should equal InternalError
 
-[<Fact(Skip = "Integration test")>]
+[<Fact()>]
 let ``it can updateStatuses``() =
     updateStatuses
         [ { Url = Uri("https://github.com/dotnet/toolset/pull/391")

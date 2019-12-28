@@ -17,7 +17,7 @@ module App =
               [ { Url = Uri("https://github.com/dotnet/sdk/pull/4086")
                   Status = InProgress } ] }
 
-    let init() = initModel, timerCmd
+    let init() = initModel, Cmd.batch [timerCmd; (Cmd.ofMsg StatusesRefreshed)] 
 
     // Note, this declaration is needed if you enable LiveUpdate
     let program = Program.mkProgram init update view

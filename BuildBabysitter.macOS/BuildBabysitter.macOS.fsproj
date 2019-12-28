@@ -118,4 +118,7 @@
       <Name>BuildBabysitter</Name>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
 </Project>
