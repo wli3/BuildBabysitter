@@ -4,6 +4,7 @@ open System.Diagnostics
 open Fabulous
 open System
 open Xamarin.Forms
+open Chiron
 
 module Model =
     type PullRequestStatus =
@@ -15,6 +16,27 @@ module Model =
     type PullRequestEntry =
         { Url : Uri
           Status : PullRequestStatus }
+
+        static member ToJson(x : PullRequestEntry) =
+            json {
+                do! Json.write "status" (x.Status.ToString())
+                do! Json.write "url" x.Url.AbsoluteUri
+            }
+
+        static member FromJson(_ : PullRequestEntry) =
+            json {
+                let! status = Json.read "status"
+                let! url = Json.read "url"
+                let matchStatus s =
+                    match s with
+                    | "InProgress" -> InProgress
+                    | "Completed" -> Completed
+                    | "NeedAttention" -> NeedAttention
+                    | "InternalError" -> InternalError
+                    | _ -> InternalError
+                return { Status = matchStatus status
+                         Url = Uri url }
+            }
 
     type Model =
         { PullRequestInput : string
@@ -31,6 +53,7 @@ module Model =
         | TextInputChanged of TextChangedEventArgs
         | UserAlerted of AlertInfo
         | TimedTick
+        | SaveToStorage
 
     let removeAt index input =
         input
@@ -57,25 +80,27 @@ module Model =
                               Repo = (uri.Segments.[2]).TrimEnd('/')
                               PullNumber = pullNumber }
                     | _ ->
-                        Error
+                        Result.Error
                             { Title = "Invalid pull request URL"
                               Message = "Not valid pull request URL. Cannot find pull number" }
                 | _ ->
-                    Error
+                    Result.Error
                         { Title = "Invalid URL input"
                           Message = "Not not valid URL. Not correct segment count" }
             | _ ->
-                Error
+                Result.Error
                     { Title = "Invalid pull request URL"
                       Message = uri.Authority + " is not github domain" }
         | (false, _) ->
-            Error
+            Result.Error
                 { Title = "Invalid URL input"
                   Message = userInput + " is not valid URL" }
 
     let timerCmd =
-        async { do! Async.Sleep (2 * 60 * 1000)
-                return TimedTick }
+        async {
+            do! Async.Sleep(2 * 60 * 1000)
+            return TimedTick
+        }
         |> Cmd.ofAsyncMsg
 
     [<Struct>]

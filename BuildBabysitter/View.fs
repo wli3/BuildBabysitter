@@ -9,10 +9,10 @@ open Xamarin.Forms
 module View =
     let color (pullRequestEntry : PullRequestEntry) : Xamarin.Forms.Color =
         match pullRequestEntry.Status with
-        | InProgress -> Color.Yellow
+        | InProgress -> Color.Default
         | NeedAttention -> Color.Red
         | InternalError -> Color.Chocolate
-        | Completed -> Color.Green
+        | Completed -> Color.LightGreen
 
     let listViewItems (pullRequests : List<PullRequestEntry>) dispatch =
         pullRequests
@@ -22,7 +22,6 @@ module View =
                 (view = View.StackLayout
                             (children = [ View.Label
                                               (text = pullRequestEntry.Url.AbsoluteUri,
-                                               horizontalOptions = LayoutOptions.Fill,
                                                backgroundColor = color pullRequestEntry)
                                           View.Button
                                               (text = "Remove",

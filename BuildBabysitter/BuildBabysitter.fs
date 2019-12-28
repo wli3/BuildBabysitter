@@ -14,8 +14,7 @@ module App =
     let initModel =
         { PullRequestInput = ""
           PullRequests =
-              [ { Url = Uri("https://github.com/dotnet/sdk/pull/4086")
-                  Status = InProgress } ] }
+              Storage.load }
 
     let init() = initModel, Cmd.batch [timerCmd; (Cmd.ofMsg StatusesRefreshed)] 
 

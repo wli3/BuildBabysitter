@@ -15,12 +15,15 @@ module Update =
         | PullRequestEntryConfirmed ->
             match parsePullRequestEntry model.PullRequestInput with
             | Ok _ ->
-                { model with
-                      PullRequests =
-                          ({ Url = Uri(model.PullRequestInput)
-                             Status = InProgress }
-                           :: model.PullRequests)
-                      PullRequestInput = "" }, Cmd.ofMsg StatusesRefreshed
+                let newModel =
+                    { model with
+                          PullRequests =
+                              ({ Url = Uri(model.PullRequestInput)
+                                 Status = InProgress }
+                               :: model.PullRequests)
+                          PullRequestInput = "" }
+                
+                newModel, Cmd.batch[ Cmd.ofMsg StatusesRefreshed; Cmd.ofMsg SaveToStorage ]
             | Error alertInfo -> model, Cmd.ofMsg (UserAlerted alertInfo)
         | UserAlerted alertInfo ->
             Application.Current.MainPage.DisplayAlert(alertInfo.Title, alertInfo.Message, "Ok")
@@ -29,5 +32,12 @@ module Update =
             model, Cmd.none
         | StatusesRefreshed ->
             let newState = updateStatuses model.PullRequests
-            { model with PullRequests = newState }, Cmd.none
-        |  TimedTick ->  model, Cmd.batch([timerCmd; Cmd.ofMsg StatusesRefreshed])
+            { model with PullRequests = newState }, Cmd.ofMsg SaveToStorage
+        | TimedTick ->
+            model,
+            Cmd.batch
+                ([ timerCmd
+                   Cmd.ofMsg StatusesRefreshed ])
+        | SaveToStorage ->
+            Storage.save model.PullRequests |> ignore
+            model, Cmd.none
