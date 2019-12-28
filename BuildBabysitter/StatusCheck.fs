@@ -56,7 +56,7 @@ module StatusCheck =
             (sprintf "https://api.github.com/repos/%s/%s/commits/%s/check-runs" pullRequest.Owner pullRequest.Repo
                  pullRequestHead.Sha)
 
-    let getPullRequestStatus(optionPullRequestCheckRuns : Option<PullRequestCheckRuns>) : PullRequestStatus =
+    let getPullRequestStatus (optionPullRequestCheckRuns : Option<PullRequestCheckRuns>) : PullRequestStatus =
         let checksStatuses (statuses : PullRequestChecksStatus []) =
             if statuses |> Array.exists (fun s -> s.Conclusion = Some "failure") then NeedAttention
             elif statuses
@@ -74,14 +74,22 @@ module StatusCheck =
         | None -> InternalError
 
     let pullRequestStatus (pullRequest : PullRequest) : PullRequestStatus =
-        let pullRequestApiCheckRuns = optional {
-            let! githubPullRequestDetailContent = pullRequest
-                                                  |> githubPullRequestDetail
-                                                  |> fetch
-            let headSha = githubPullRequestDetailContent |> getGithubPullRequestHeadSha
-            let! commitShaStatusContent = headSha
-                                          |> commitCheckRuns pullRequest
-                                          |> fetch
-            return commitShaStatusContent |> getPullRequestApiCheckRuns
-        }
+        let pullRequestApiCheckRuns =
+            optional {
+                let! githubPullRequestDetailContent = pullRequest
+                                                      |> githubPullRequestDetail
+                                                      |> fetch
+                let headSha = githubPullRequestDetailContent |> getGithubPullRequestHeadSha
+                let! commitShaStatusContent = headSha
+                                              |> commitCheckRuns pullRequest
+                                              |> fetch
+                return commitShaStatusContent |> getPullRequestApiCheckRuns
+            }
         getPullRequestStatus pullRequestApiCheckRuns
+
+    let updateStatuses (pullRequests : List<PullRequestEntry>) : List<PullRequestEntry> =
+        pullRequests
+        |> List.map (fun p ->
+            match parsePullRequestEntry p.Url.AbsoluteUri with
+            | Ok entry -> { p with Status = entry |> pullRequestStatus }
+            | _ -> { p with Status = InternalError })
