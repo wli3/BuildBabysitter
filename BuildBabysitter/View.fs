@@ -23,7 +23,7 @@ module View =
                             (children = [ View.Label
                                               (text = pullRequestEntry.Url.AbsoluteUri,
                                                horizontalOptions = LayoutOptions.Fill,
-                                               shellBackgroundColor = color pullRequestEntry)
+                                               backgroundColor = color pullRequestEntry)
                                           View.Button
                                               (text = "Remove",
                                                command = (fun () -> dispatch (PullRequestEntryRemoved index)),

@@ -28,4 +28,5 @@ module Update =
             |> ignore
             model, Cmd.none
         | StatusesRefreshed ->
-            { model with PullRequests = updateStatuses model.PullRequests }, Cmd.none
+            let newstate = updateStatuses model.PullRequests
+            { model with PullRequests = newstate }, Cmd.none

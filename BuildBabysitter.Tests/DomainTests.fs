@@ -7,6 +7,7 @@ open Fabulous
 open FsUnit.Xunit
 open Xunit
 open System
+open Update
 open Fabulous.XamarinForms
 open StatusCheck
 open System.IO
@@ -173,3 +174,7 @@ let ``it can map Check runs status - InternalError``() =
     None
     |> getPullRequestStatus
     |> should equal InternalError
+
+[<Fact>]
+let ``it can updateStatuses``() =
+    updateStatuses [ { Url = Uri("https://github.com/dotnet/toolset/pull/391"); Status = NeedAttention } ] |> should equal 3

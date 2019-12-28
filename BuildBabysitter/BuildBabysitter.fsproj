@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +23,5 @@
     <PackageReference Update="FSharp.Core" Version="4.6.2" /> <!-- workaround for VSMac bug https://github.com/mono/monodevelop/pull/5137 --> 
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Chiron" Version="6.3.1" />
-    <PackageReference Include="Http.fs" Version="5.3.0" />
   </ItemGroup>
 </Project>
