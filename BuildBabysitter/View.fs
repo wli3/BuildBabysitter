@@ -7,6 +7,13 @@ open Fabulous.XamarinForms
 open Xamarin.Forms
 
 module View =
+    let color (pullRequestEntry : PullRequestEntry) : Xamarin.Forms.Color =
+        match pullRequestEntry.Status with
+        | InProgress -> Color.Yellow
+        | NeedAttention -> Color.Red
+        | InternalError -> Color.Chocolate
+        | Completed -> Color.Green
+
     let listViewItems (pullRequests : List<PullRequestEntry>) dispatch =
         pullRequests
         |> List.mapi
@@ -15,7 +22,8 @@ module View =
                 (view = View.StackLayout
                             (children = [ View.Label
                                               (text = pullRequestEntry.Url.AbsoluteUri,
-                                               horizontalOptions = LayoutOptions.Fill)
+                                               horizontalOptions = LayoutOptions.Fill,
+                                               shellBackgroundColor = color pullRequestEntry)
                                           View.Button
                                               (text = "Remove",
                                                command = (fun () -> dispatch (PullRequestEntryRemoved index)),
@@ -24,7 +32,10 @@ module View =
     let view (model : Model) dispatch =
         View.ContentPage
             (content = View.StackLayout
-                           (children = [ View.Entry
+                           (children = [ View.Button
+                                             (text = "Manual Refresh", command = (fun () -> dispatch StatusesRefreshed),
+                                              horizontalOptions = LayoutOptions.Start)
+                                         View.Entry
                                              (text = model.PullRequestInput, placeholder = "Pull request to watch",
                                               textChanged = (fun e -> dispatch (TextInputChanged e)))
                                          View.ListView(items = listViewItems model.PullRequests dispatch)

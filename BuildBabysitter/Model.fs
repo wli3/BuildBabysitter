@@ -27,6 +27,7 @@ module Model =
     type Msg =
         | PullRequestEntryRemoved of int
         | PullRequestEntryConfirmed
+        | StatusesRefreshed
         | TextInputChanged of TextChangedEventArgs
         | UserAlerted of AlertInfo
 

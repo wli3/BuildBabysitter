@@ -27,3 +27,5 @@ module Update =
             |> Async.AwaitTask
             |> ignore
             model, Cmd.none
+        | StatusesRefreshed ->
+            { model with PullRequests = updateStatuses model.PullRequests }, Cmd.none
