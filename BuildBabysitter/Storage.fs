@@ -9,7 +9,12 @@ open Model
 open StatusCheck
 open Chiron
 
+type public IStorage =
+    abstract member SaveText: string -> unit
+    abstract member LoadText: string
+
 module Storage =
+
     let private storageFileName = "saved-pull-request-status.json"
     let private folder =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "build-babysitter")
