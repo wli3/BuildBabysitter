@@ -7,6 +7,7 @@ using Xamarin.Forms;
 using BuildBabysitter;
 using Windows.Storage;
 using System.IO;
+using Microsoft.FSharp.Core;
 
 [assembly: Dependency(typeof(BuildBabysitter.UWP.Storage))]
 namespace BuildBabysitter.UWP
@@ -14,7 +15,7 @@ namespace BuildBabysitter.UWP
     public class Storage : IStorage
     {
         private readonly string _fileName = "saved-pull-request-status.json";
-        public string LoadText
+        public FSharpOption<string> LoadText
         {
             get
             {
@@ -23,11 +24,11 @@ namespace BuildBabysitter.UWP
                 {
                     StorageFile file =
                        storageFolder.GetFileAsync(_fileName).GetAwaiter().GetResult();
-                    return FileIO.ReadTextAsync(file).GetAwaiter().GetResult();
+                    return new FSharpOption<string>(FileIO.ReadTextAsync(file).GetAwaiter().GetResult());
                 }
                 catch (FileNotFoundException)
                 {
-                    return "";
+                    return FSharpOption<string>.None;
                 }
             }
         }

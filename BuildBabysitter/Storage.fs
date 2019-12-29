@@ -11,7 +11,7 @@ open Chiron
 
 type public IStorage =
     abstract member SaveText: string -> unit
-    abstract member LoadText: string
+    abstract member LoadText: option<string>
 
 module Storage =
 
@@ -25,12 +25,25 @@ module Storage =
             pullRequestEntry
             |> Json.serialize
             |> Json.format
-        if not (Directory.Exists(folder)) then (Directory.CreateDirectory(folder)) |> ignore
-        File.WriteAllText(storageFilePath, text) |> ignore
+        if Device.RuntimePlatform = Device.UWP then
+            let service = DependencyService.Get<IStorage>();
+            service.SaveText text |> ignore
+        else
+            if not (Directory.Exists(folder)) then (Directory.CreateDirectory(folder)) |> ignore
+            File.WriteAllText(storageFilePath, text) |> ignore
 
     let load : List<PullRequestEntry> =
-        if (not (Directory.Exists(folder))) || (not (File.Exists(storageFilePath))) then []
+        if Device.RuntimePlatform = Device.UWP then
+            let service = DependencyService.Get<IStorage>();
+            match service.LoadText with
+            | Some text ->
+                if String.IsNullOrWhiteSpace(text) then []
+                else text |> Json.parse |> Json.deserialize
+            | None -> []
         else
-            File.ReadAllText(storageFilePath)
-            |> Json.parse
-            |> Json.deserialize
+            if (not (Directory.Exists(folder))) || (not (File.Exists(storageFilePath))) then []
+            else
+                File.ReadAllText(storageFilePath)
+                |> Json.parse
+                |> Json.deserialize
+                

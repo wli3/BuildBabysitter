@@ -10,7 +10,7 @@ open StatusCheck
 module Update =
     let update msg model =
         match msg with
-        | PullRequestEntryRemoved index -> { model with PullRequests = removeAt index model.PullRequests }, Cmd.none
+        | PullRequestEntryRemoved index -> { model with PullRequests = removeAt index model.PullRequests }, Cmd.ofMsg SaveToStorage
         | TextInputChanged e -> { model with PullRequestInput = e.NewTextValue }, Cmd.none
         | PullRequestEntryConfirmed ->
             match parsePullRequestEntry model.PullRequestInput with

@@ -40,3 +40,5 @@ release/package-lock\.json
 /vendor/.paket/Paket.Restore.targets
 /release-exp/
 packages/
+AppPackages/
+BundleArtifacts/
