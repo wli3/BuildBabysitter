@@ -39,7 +39,7 @@ module View =
                                               textChanged = (fun e -> dispatch (TextInputChanged e)))
                                          View.ListView
                                              (items = (listViewItems model.PullRequests dispatch),
-                                              itemTapped = (fun e -> dispatch (ClipboardCopied e)))
+                                              itemTapped = (fun e -> dispatch (LinkOpened e)))
                                          View.Button
                                              (text = "Add", command = (fun () -> dispatch PullRequestEntryConfirmed),
                                               horizontalOptions = LayoutOptions.Center) ]))

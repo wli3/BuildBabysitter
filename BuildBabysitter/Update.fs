@@ -42,6 +42,6 @@ module Update =
         | SaveToStorage ->
             Storage.save model.PullRequests |> ignore
             model, Cmd.none
-        | ClipboardCopied index ->
-            Clipboard.SetTextAsync(model.PullRequests.[index].Url.AbsoluteUri).GetAwaiter().GetResult() |> ignore
+        | LinkOpened index ->
+            Launcher.OpenAsync(model.PullRequests.[index].Url).GetAwaiter().GetResult() |> ignore
             model, Cmd.none
