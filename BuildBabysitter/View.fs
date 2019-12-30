@@ -26,7 +26,7 @@ module View =
                                           View.Button
                                               (text = "Remove",
                                                command = (fun () -> dispatch (PullRequestEntryRemoved index)),
-                                               horizontalOptions = LayoutOptions.End) ])))
+                                               horizontalOptions = LayoutOptions.End)])))
 
     let view (model : Model) dispatch =
         View.ContentPage
@@ -37,7 +37,9 @@ module View =
                                          View.Entry
                                              (text = model.PullRequestInput, placeholder = "Pull request to watch",
                                               textChanged = (fun e -> dispatch (TextInputChanged e)))
-                                         View.ListView(items = listViewItems model.PullRequests dispatch)
+                                         View.ListView
+                                             (items = (listViewItems model.PullRequests dispatch),
+                                              itemTapped = (fun e -> dispatch (ClipboardCopied e)))
                                          View.Button
                                              (text = "Add", command = (fun () -> dispatch PullRequestEntryConfirmed),
                                               horizontalOptions = LayoutOptions.Center) ]))

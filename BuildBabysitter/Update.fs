@@ -6,6 +6,7 @@ open System
 open Xamarin.Forms
 open Model
 open StatusCheck
+open Xamarin.Essentials;
 
 module Update =
     let update msg model =
@@ -40,4 +41,7 @@ module Update =
                    Cmd.ofMsg StatusesRefreshed ])
         | SaveToStorage ->
             Storage.save model.PullRequests |> ignore
+            model, Cmd.none
+        | ClipboardCopied index ->
+            Clipboard.SetTextAsync(model.PullRequests.[index].Url.AbsoluteUri).GetAwaiter().GetResult() |> ignore
             model, Cmd.none

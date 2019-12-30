@@ -54,6 +54,7 @@ module Model =
         | UserAlerted of AlertInfo
         | TimedTick
         | SaveToStorage
+        | ClipboardCopied of int
 
     let removeAt index input =
         input
