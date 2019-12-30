@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="f33bd753-7cb6-4177-bf50-b993ed286c3b" Publisher="CN=Fabulous contributors" Version="0.1.1.0" />
-  <mp:PhoneIdentity PhoneProductId="f33bd753-7cb6-4177-bf50-b993ed286c3b" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="28345WillLProduction.BuildBabysitter" Publisher="CN=BuildBabysitter contributors" Version="0.1.5.0" />
+  <mp:PhoneIdentity PhoneProductId="f4f5ebb6-1c78-4a8c-803e-e7d4c27c7645" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>BuildBabysitter.UWP</DisplayName>
-    <PublisherDisplayName>Fabulous contributors</PublisherDisplayName>
+    <DisplayName>Build Babysitter</DisplayName>
+    <PublisherDisplayName>Will L Production</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

@@ -98,7 +98,7 @@ module Model =
 
     let timerCmd =
         async {
-            do! Async.Sleep(2 * 60 * 1000)
+            do! Async.Sleep(10 * 60 * 1000)
             return TimedTick
         }
         |> Cmd.ofAsyncMsg
