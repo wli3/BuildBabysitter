@@ -38,7 +38,8 @@ module View =
                                               horizontalOptions = LayoutOptions.Start)
                                          View.Entry
                                              (text = model.PullRequestInput, placeholder = "Pull request to watch",
-                                              textChanged = (fun e -> dispatch (TextInputChanged e)))
+                                              textChanged = (fun e -> dispatch (TextInputChanged e)),
+                                              completed = (fun _ -> dispatch PullRequestEntryConfirmed))
                                          View.ListView
                                              (items = (listViewItems model.PullRequests dispatch),
                                               itemTapped = (fun e -> dispatch (LinkOpened e)))
