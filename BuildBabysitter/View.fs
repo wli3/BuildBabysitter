@@ -20,8 +20,10 @@ module View =
             (fun index pullRequestEntry ->
             View.ViewCell
                 (view = View.StackLayout
-                            (children = [ View.Label
+                            (orientation = StackOrientation.Horizontal,
+                             children = [ View.Label
                                               (text = pullRequestEntry.Url.AbsoluteUri,
+                                               horizontalOptions = LayoutOptions.FillAndExpand,
                                                backgroundColor = color pullRequestEntry)
                                           View.Button
                                               (text = "Remove",
