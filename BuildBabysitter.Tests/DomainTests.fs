@@ -176,7 +176,7 @@ let ``it can map Check runs status - InternalError``() =
     |> getPullRequestStatus
     |> should equal InternalError
 
-[<Fact()>]
+[<Fact>]
 let ``it can updateStatuses``() =
     updateStatuses
         [ { Url = Uri("https://github.com/dotnet/toolset/pull/391")
@@ -184,3 +184,42 @@ let ``it can updateStatuses``() =
     |> should equal
            [ { Url = (Uri "https://github.com/dotnet/toolset/pull/391")
                Status = Completed } ]
+
+[<Fact>]
+let ``it can generate state change``() =
+    let oldState =
+        [ { Url = Uri("https://github.com/dotnet/toolset/pull/1")
+            Status = InProgress }
+          { Url = Uri("https://github.com/dotnet/toolset/pull/2")
+            Status = InProgress }
+          { Url = Uri("https://github.com/dotnet/toolset/pull/3")
+            Status = InProgress }
+          { Url = Uri("https://github.com/dotnet/toolset/pull/4")
+            Status = NeedAttention }
+          { Url = Uri("https://github.com/dotnet/toolset/pull/5")
+            Status = InProgress } ]
+
+    let newState =
+        [ { Url = Uri("https://github.com/dotnet/toolset/pull/1")
+            Status = Completed }
+          { Url = Uri("https://github.com/dotnet/toolset/pull/2")
+            Status = InProgress }
+          { Url = Uri("https://github.com/dotnet/toolset/pull/4")
+            Status = InProgress }
+          { Url = Uri("https://github.com/dotnet/toolset/pull/5")
+            Status = NeedAttention } ]
+
+    let expectList = [ "toolset/1 InProgress->Completed"; "toolset/5 InProgress->NeedAttention" ]
+    (diffModelChange oldState newState).Value |> should equal (String.Join(Environment.NewLine, expectList))
+
+[<Fact>]
+let ``it is none when nothing is changed``() =
+    let oldState =
+        [ { Url = Uri("https://github.com/dotnet/toolset/pull/1")
+            Status = InProgress } ]
+
+    let newState =
+        [ { Url = Uri("https://github.com/dotnet/toolset/pull/1")
+            Status = InProgress } ]
+
+    diffModelChange oldState newState |> should equal None

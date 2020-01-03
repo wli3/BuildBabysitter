@@ -92,3 +92,27 @@ module StatusCheck =
             match parsePullRequestEntry p.Url.AbsoluteUri with
             | Ok entry -> { p with Status = entry |> pullRequestStatus }
             | _ -> { p with Status = InternalError })
+
+    let diffModelChange (oldState : List<PullRequestEntry>) (newState : List<PullRequestEntry>) : option<string> =
+        let singleEntry (target : PullRequestEntry) : Option<string> =
+            match newState |> List.tryFind (fun e -> e.Url = target.Url) with
+            | None -> None
+            | Some matchedNewState ->
+                if ((target.Status <> matchedNewState.Status) && matchedNewState.Status <> InProgress) then
+                    let resultParsed = (parsePullRequestEntry matchedNewState.Url.AbsoluteUri)
+                    match resultParsed with
+                    | Ok parsed ->
+                        Some
+                            (sprintf "%s/%i %s->%s" parsed.Repo parsed.PullNumber (target.Status.ToString())
+                                 (matchedNewState.Status.ToString()))
+                    | _ -> invalidOp "could not parse url"
+                else None
+
+        let resultList =
+            oldState
+            |> List.map (fun o -> singleEntry o)
+            |> List.choose id
+
+        match resultList with
+        | [] -> None
+        | _ -> Some(String.Join(Environment.NewLine, resultList))

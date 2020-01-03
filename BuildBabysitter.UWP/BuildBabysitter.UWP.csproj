@@ -201,6 +201,9 @@
   <ItemGroup>
     <PackageReference Include="FSharp.Core" Version="4.7.0" />
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.3" />
+    <PackageReference Include="Xam.Plugins.Notifier">
+      <Version>3.0.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuildBabysitter\BuildBabysitter.fsproj">
