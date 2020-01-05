@@ -38,10 +38,15 @@ module Update =
             model, Cmd.none
         | StatusesRefreshed ->
             let newState = updateStatuses model.PullRequests
-
             let notificationMessage = (diffModelChange model.PullRequests newState)
+
             match notificationMessage with
-            | Some message -> CrossLocalNotifications.Current.Show("Status Changed", message) |> ignore
+            | Some message ->
+                match Device.RuntimePlatform with
+                | Device.WPF ->
+                    let service = DependencyService.Get<INotification>();
+                    service.Show "Status Changed" message |> ignore
+                | _ -> CrossLocalNotifications.Current.Show("Status Changed", message) |> ignore
             | None -> ()
 
             { model with PullRequests = newState }, Cmd.ofMsg SaveToStorage
@@ -54,5 +59,7 @@ module Update =
             Storage.save model.PullRequests |> ignore
             model, Cmd.none
         | LinkOpened index ->
-            Launcher.OpenAsync(model.PullRequests.[index].Url).GetAwaiter().GetResult() |> ignore
+            match Device.RuntimePlatform with
+            | Device.WPF -> System.Diagnostics.Process.Start(model.PullRequests.[index].Url.AbsoluteUri) |> ignore
+            | _ -> Launcher.OpenAsync(model.PullRequests.[index].Url).GetAwaiter().GetResult() |> ignore
             model, Cmd.none
