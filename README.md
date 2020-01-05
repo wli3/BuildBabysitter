@@ -1,5 +1,9 @@
 # Build Babaysitter
 
+## Download
+
+[In release page](https://github.com/wli3/BuildBabysitter/releases)
+
 ## Features
 
 ![Feature Demo](ReadmeImages/demo.gif)
